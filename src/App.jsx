@@ -1,19 +1,27 @@
-import React, { createContext, useState } from 'react';
-import Head from './components/Head';
-import Formulario from './components/Formulario';
+import React, { useState } from 'react';
+import { UserContext } from "./context/UserContext";
+import Header from "./components/Header";
+import Main from "./components/Main";
+import Footer from "./components/Footer";
 
-// Crear un contexto para el email del usuario
-export const UserContext = createContext();
+function App() {
+  const [userData, setUserData] = useState("");
 
-const App = () => {
-  const [userEmail, setUserEmail] = useState('');
+  const updateUserData = (newUserData) => {
+    setUserData(newUserData);
+  };
+
+  const userContextValue = { userData, updateUserData };
 
   return (
-    <UserContext.Provider value={userEmail}>
-        <Head />
-        <Formulario setUserEmail={setUserEmail} />
-    </UserContext.Provider>
+    <>
+      <UserContext.Provider value={userContextValue}>
+        <Header />
+        <Main />
+      </UserContext.Provider>
+      <Footer />
+    </>
   );
-};
+}
 
 export default App;

@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { UserContext } from '../../../context/UserContext';
 import Card from '../Card';
 
-const Formulario = ({ setUserEmail }) => {
+const Formulario = () => {
+  const { updateUserData } = useContext(UserContext);
+
   const [mostrarResumen, setMostrarResumen] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
@@ -16,23 +19,23 @@ const Formulario = ({ setUserEmail }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Actualiza el email en el componente Head
-    setUserEmail(formData.email);
+    updateUserData(formData.email);
     setMostrarResumen(true);
   };
 
-  const clearItems = () =>{
+  const clearItems = () => {
     setFormData({
       nombre: '',
       email: '',
       urlFoto: '',
       edad: '',
-    }); 
-    setMostrarResumen(false)
-  }
+    });
+    setMostrarResumen(false);
+  };
 
   return (
-    <section>
+    <UserContext.Provider value={formData}>
+      <section>
       <form onSubmit={handleSubmit}>
         <label htmlFor="nombre">Nombre:</label>
         <input type="text" id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} required />
@@ -49,19 +52,11 @@ const Formulario = ({ setUserEmail }) => {
         <button type="submit">Enviar</button>
       </form>
 
-      <button onClick={clearItems}>Limpiar</button>
+        <button onClick={clearItems}>Limpiar</button>
 
-      
-      {mostrarResumen && formData.email && (
-        <div>
-          <h2>Resumen de Datos</h2>
-          <p><strong>Nombre:</strong> {formData.nombre}</p>
-          <p><strong>Email:</strong> {formData.email}</p>
-          <p><strong>Edad:</strong> {formData.edad}</p>
-          <img src={formData.urlFoto} alt="userImage"  />
-        </div>
-      )}
-    </section>
+        {mostrarResumen && formData.email && <Card />}
+      </section>
+    </UserContext.Provider>
   );
 };
 
